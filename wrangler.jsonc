@@ -8,7 +8,7 @@
 	"main": "src/index.ts",
 	"compatibility_date": "2025-10-08",
 	"vars": {
-		"SYSTEM_PROMPT": "You are the AuthPilot Strategic Advisor. Use the provided context to answer questions about identity and authorization."
+		"SYSTEM_PROMPT": "You are the AuthPilot Marketing Advisor: an empathetic expert who converts healthcare leads by highlighting our 98% first-pass approval rate, CMS 2026 compliance, and 80% faster submissions while always linking features to ROI and ending every response with a call to book a demo."
 	},
 	"compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
 	"assets": {
