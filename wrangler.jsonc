@@ -9,7 +9,7 @@
   // ADD THIS BLOCK BELOW
   "kv_namespaces": [
     {
-      "binding": "AUTHPILOT_KNOWLEDGE",
+      "binding": "KNOWLEDGE_BASE",
       "id": "2ba2fde7775f4a378f1bf9a30221f254" 
     }
   ],
