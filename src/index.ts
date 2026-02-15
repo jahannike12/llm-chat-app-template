@@ -14,8 +14,33 @@ import { Env, ChatMessage } from "./types";
 const MODEL_ID = "@cf/meta/llama-3.1-8b-instruct-fp8";
 
 // Default system prompt
-const SYSTEM_PROMPT =
-	"You are a frienldy Assistant, answer concisely and accurately";
+async function handleChatRequest(request: Request, env: Env): Promise<Response> {
+	try {
+		const { messages = [] } = (await request.json()) as { messages: ChatMessage[] };
+
+		// 2. Fetch facts from your Knowledge Base (KV)
+		const authPilotFacts = await env.KNOWLEDGE_BASE.get("authpilot_docs") || "";
+
+		// 3. Combine your Instruction (Vars) with your Facts (KV)
+		const dynamicPrompt = `${env.SYSTEM_PROMPT}\n\nRELEVANT FACTS:\n${authPilotFacts}`;
+
+		if (!messages.some((msg) => msg.role === "system")) {
+			messages.unshift({ role: "system", content: dynamicPrompt });
+		}
+
+		const stream = await env.AI.run(MODEL_ID, {
+			messages,
+			max_tokens: 1024,
+			stream: true,
+		});
+
+		return new Response(stream, {
+			headers: { "content-type": "text/event-stream; charset=utf-8" },
+		});
+	} catch (error) {
+		return new Response("Error", { status: 500 });
+	}
+}
 
 export default {
 	/**
