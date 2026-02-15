@@ -1,16 +1,8 @@
-/**
- * AuthPilot Solution Chat Agent
- * * This Worker uses environment variables for instructions and 
- * Cloudflare KV for the product knowledge base.
- */
 import { Env, ChatMessage } from "./types";
 
 const MODEL_ID = "@cf/meta/llama-3.1-8b-instruct-fp8";
 
 export default {
-    /**
-     * Main request handler for the Worker
-     */
     async fetch(
         request: Request,
         env: Env,
@@ -18,26 +10,20 @@ export default {
     ): Promise<Response> {
         const url = new URL(request.url);
 
-        // Handle static assets (frontend)
+        // Handle frontend assets
         if (url.pathname === "/" || !url.pathname.startsWith("/api/")) {
             return env.ASSETS.fetch(request);
         }
 
-        // API Routes
-        if (url.pathname === "/api/chat") {
-            if (request.method === "POST") {
-                return handleChatRequest(request, env);
-            }
-            return new Response("Method not allowed", { status: 405 });
+        // API Route
+        if (url.pathname === "/api/chat" && request.method === "POST") {
+            return handleChatRequest(request, env);
         }
 
         return new Response("Not found", { status: 404 });
     },
 } satisfies ExportedHandler<Env>;
 
-/**
- * Handles chat API requests with dynamic grounding
- */
 async function handleChatRequest(
     request: Request,
     env: Env,
@@ -47,14 +33,13 @@ async function handleChatRequest(
             messages: ChatMessage[];
         };
 
-        // 1. Fetch facts from your Knowledge Base (KV)
-        const authPilotFacts = await env.KNOWLEDGE_BASE.get("authpilot_docs") || "No specific facts found.";
+        // 1. Fetch marketing facts from KV
+        const authPilotFacts = await env.KNOWLEDGE_BASE.get("authpilot_docs") || "AuthPilot: AI-driven Prior Authorization.";
 
-        // 2. Combine the Instruction (from Env Vars) with the Facts (from KV)
-        // This ensures the AI is grounded in the AuthPilot context
-        const dynamicPrompt = `${env.SYSTEM_PROMPT}\n\nRELEVANT AUTHPILOT FACTS:\n${authPilotFacts}`;
+        // 2. Build the dynamic prompt
+        const dynamicPrompt = `${env.SYSTEM_PROMPT}\n\nCONTEXT:\n${authPilotFacts}`;
 
-        // 3. Inject this system prompt if it's a new conversation
+        // 3. Ensure system prompt is at the top
         if (!messages.some((msg) => msg.role === "system")) {
             messages.unshift({ role: "system", content: dynamicPrompt });
         }
@@ -69,17 +54,9 @@ async function handleChatRequest(
             headers: {
                 "content-type": "text/event-stream; charset=utf-8",
                 "cache-control": "no-cache",
-                "connection": "keep-alive",
             },
         });
     } catch (error) {
-        console.error("Error processing chat request:", error);
-        return new Response(
-            JSON.stringify({ error: "Failed to process request" }),
-            {
-                status: 500,
-                headers: { "content-type": "application/json" },
-            }
-        );
+        return new Response(JSON.stringify({ error: "Build Error" }), { status: 500 });
     }
 }
