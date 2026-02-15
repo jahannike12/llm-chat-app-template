@@ -7,6 +7,9 @@
 	"name": "llm-chat-app-template",
 	"main": "src/index.ts",
 	"compatibility_date": "2025-10-08",
+	"vars": {
+		"SYSTEM_PROMPT": "You are the AuthPilot Strategic Advisor. Use the provided context to answer questions about identity and authorization."
+	},
 	"compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
 	"assets": {
 		"binding": "ASSETS",
