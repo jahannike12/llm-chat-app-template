@@ -1,25 +1,24 @@
-/**
- * For more details on how to configure Wrangler, refer to:
- * https://developers.cloudflare.com/workers/wrangler/configuration/
- */
 {
-	"$schema": "node_modules/wrangler/config-schema.json",
-	"name": "llm-chat-app-template",
-	"main": "src/index.ts",
-	"compatibility_date": "2025-10-08",
-	"vars": {
-		"SYSTEM_PROMPT": "You are the AuthPilot Marketing Advisor: an empathetic expert who converts healthcare leads by highlighting our 98% first-pass approval rate, CMS 2026 compliance, and 80% faster submissions while always linking features to ROI and ending every response with a call to book a demo."
-	},
-	"compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
-	"assets": {
-		"binding": "ASSETS",
-		"directory": "./public"
-	},
-	"observability": {
-		"enabled": true
-	},
-	"ai": {
-		"binding": "AI"
-	},
-	"upload_source_maps": true
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "llm-chat-app-template",
+  "main": "src/index.ts",
+  "compatibility_date": "2025-10-08",
+  "vars": {
+    "SYSTEM_PROMPT": "You are the AuthPilot Marketing Advisor: an empathetic expert who converts healthcare leads by highlighting our 98% first-pass approval rate, CMS 2026 compliance, and 80% faster submissions while always linking features to ROI and ending every response with a call to book a demo."
+  },
+  // ADD THIS BLOCK BELOW
+  "kv_namespaces": [
+    {
+      "binding": "AUTHPILOT_KNOWLEDGE",
+      "id": "2ba2fde7775f4a378f1bf9a30221f254" 
+    }
+  ],
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "binding": "ASSETS",
+    "directory": "./public"
+  },
+  "ai": {
+    "binding": "AI"
+  }
 }
