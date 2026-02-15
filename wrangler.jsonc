@@ -10,7 +10,7 @@
   "kv_namespaces": [
     {
       "binding": "KNOWLEDGE_BASE",
-      "id": "2ba2fde7775f4a378f1bf9a30221f254" 
+      "id": "34510dbdfce84fb18f2e3b0bd0a68f83" 
     }
   ],
   "compatibility_flags": ["nodejs_compat"],
